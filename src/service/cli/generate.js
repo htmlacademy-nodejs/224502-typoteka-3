@@ -61,39 +61,29 @@ const CATEGORIES = [
   `Железо`
 ];
 
-const getRandomTextFromArray = (arr, max) => {
-  let maxLength = max || arr.length - 1;
-  let indexes = [];
-  let result = [];
-  for (let i = 0; i < maxLength; i++) {
-    // if ()
-
-    // result.push(arr[i]);
-  }
-  return result.join(' ');
-};
-
 const generateOffers = (count) => (
   Array(count).fill({}).map(() => ({
     title: TITLES[getRandomInt(0, TITLES.length - 1)],
-    announce: getRandomTextFromArray(TEXTES, 5),
-
+    announce: shuffle(TEXTES, 5).slice(0, 5).join(' '),
+    fullText: shuffle(TEXTES, 5).slice(0, getRandomInt(1, TEXTES.length)).join(' '),
   }))
 );
 
 module.exports = {
   name: `--generate`,
-  run(args) {
-    console.info(getRandomTextFromArray(TEXTES, 5));
-    // const [count] = args;
-    // const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT;
-    // const content = JSON.stringify(generateOffers(countOffer));
-    // fs.writeFile(FILE_NAME, content, (err) => {
-    //   if (err) {
-    //     return console.error(`Can't write data to file...`);
-    //   }
-
-    //   return console.info(`Operation success. File created.`);
-    // });
+  run(count) {
+    const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT;
+    let content = '';
+    try {
+      content = JSON.stringify(generateOffers(countOffer));
+    } catch (e) {
+      console.error(`Can't write data to file...`);
+    }
+    fs.writeFile(FILE_NAME, content, (err) => {
+      if (err) {
+        return console.error(`Can't write data to file...`);
+      }
+      return console.info(`Operation success. File created.`);
+    });
   }
 }
