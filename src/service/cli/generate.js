@@ -5,6 +5,12 @@ const fs = require(`fs`);
 const DEFAULT_COUNT = 1;
 const FILE_NAME = `mocks.json`;
 
+const {
+  getRandomInt,
+  shuffle,
+  getPictureFileName
+} = require(`../utils`);
+
 const TITLES = [
   `Ёлки. История деревьев`,
   `Как перестать беспокоиться и начать жить `,
@@ -66,13 +72,6 @@ const getRandomTextFromArray = (arr, max) => {
   }
   return result.join(' ');
 };
-
-
-const {
-  getRandomInt,
-  shuffle,
-  getPictureFileName
-} = require(`../utils`);
 
 const generateOffers = (count) => (
   Array(count).fill({}).map(() => ({
