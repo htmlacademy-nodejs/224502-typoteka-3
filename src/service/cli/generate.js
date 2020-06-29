@@ -61,11 +61,17 @@ const CATEGORIES = [
   `Железо`
 ];
 
+const getRandomText = (arr, max) => {
+  let sliceTo = max || getRandomInt(1, TEXTES.length);
+  return shuffle(arr).slice(0, sliceTo).join(' ');
+};
+
 const generateOffers = (count) => (
   Array(count).fill({}).map(() => ({
     title: TITLES[getRandomInt(0, TITLES.length - 1)],
-    announce: shuffle(TEXTES, 5).slice(0, 5).join(' '),
-    fullText: shuffle(TEXTES, 5).slice(0, getRandomInt(1, TEXTES.length)).join(' '),
+    announce: getRandomText(TEXTES, 5),
+    fullText: getRandomText(TEXTES),
+    сategory: shuffle(CATEGORIES).slice(0, getRandomInt(1, CATEGORIES.length))
   }))
 );
 
