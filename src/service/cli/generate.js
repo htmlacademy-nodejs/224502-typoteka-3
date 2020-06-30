@@ -8,8 +8,13 @@ const FILE_NAME = `mocks.json`;
 const {
   getRandomInt,
   shuffle,
-  getPictureFileName
+  getRandomDate,
+  formatDate
 } = require(`../utils`);
+
+const {
+  ExitCode
+} = require(`../constants`);
 
 const TITLES = [
   `Ёлки. История деревьев`,
@@ -66,30 +71,40 @@ const getRandomText = (arr, max) => {
   return shuffle(arr).slice(0, sliceTo).join(' ');
 };
 
+const getMonthesRandomDate = (monthesCount) => {
+  let minDate = new Date();
+  minDate.setMonth(minDate.getMonth() - monthesCount);
+  return formatDate(getRandomDate(minDate, new Date()));
+};
+
 const generateOffers = (count) => (
   Array(count).fill({}).map(() => ({
     title: TITLES[getRandomInt(0, TITLES.length - 1)],
     announce: getRandomText(TEXTES, 5),
     fullText: getRandomText(TEXTES),
-    сategory: shuffle(CATEGORIES).slice(0, getRandomInt(1, CATEGORIES.length))
+    сategory: shuffle(CATEGORIES).slice(0, getRandomInt(1, CATEGORIES.length)),
+    createdDate: getMonthesRandomDate(3)
   }))
 );
 
 module.exports = {
   name: `--generate`,
   run(count) {
-    const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT;
-    let content = '';
     try {
-      content = JSON.stringify(generateOffers(countOffer));
-    } catch (e) {
-      console.error(`Can't write data to file...`);
-    }
-    fs.writeFile(FILE_NAME, content, (err) => {
-      if (err) {
-        return console.error(`Can't write data to file...`);
+      const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT;
+      const content = JSON.stringify(generateOffers(countOffer));
+      if (countOffer > 1000) {
+        throw new Error(`Не больше 1000 публикаций`);
       }
-      return console.info(`Operation success. File created.`);
-    });
+      fs.writeFile(FILE_NAME, content, (err) => {
+        if (err) {
+          throw new Error(`Can't write data to file...`);
+        }
+        return console.info(`Operation success. File created.`);
+      });
+    } catch (e) {
+      console.error(e);
+      process.exit(ExitCode.error);
+    }
   }
 }
