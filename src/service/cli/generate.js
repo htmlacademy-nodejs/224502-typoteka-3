@@ -2,9 +2,6 @@
 
 const fs = require(`fs`);
 
-const DEFAULT_COUNT = 1;
-const FILE_NAME = `mocks.json`;
-
 const {
   getRandomInt,
   shuffle,
@@ -15,6 +12,9 @@ const {
 const {
   ExitCode
 } = require(`../constants`);
+
+const DEFAULT_COUNT = 1;
+const FILE_NAME = `mocks.json`;
 
 const TITLES = [
   `Ёлки. История деревьев`,

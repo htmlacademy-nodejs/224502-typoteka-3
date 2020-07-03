@@ -18,12 +18,16 @@ module.exports.getRandomDate = (start, end) => {
   return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 };
 
+const getDateStringItem = (date) => {
+  return (`0${date}`).slice(-2);
+};
+
 module.exports.formatDate = (date) => {
-  let day = (`0${date.getDate()}`).slice(-2);
-  let month = (`0${(date.getMonth() + 1)}`).slice(-2);
-  let year = date.getFullYear();
-  let hours = (`0${(date.getHours())}`).slice(-2);
-  let minutes = (`0${(date.getMinutes())}`).slice(-2);
-  let seconds = (`0${(date.getSeconds())}`).slice(-2);
+  const day = getDateStringItem(date.getDate());
+  const month = getDateStringItem(date.getMonth() + 1);
+  const year = date.getFullYear();
+  const hours = getDateStringItem(date.getHours());
+  const minutes = getDateStringItem(date.getMinutes());
+  const seconds = getDateStringItem(date.getSeconds());
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 };
