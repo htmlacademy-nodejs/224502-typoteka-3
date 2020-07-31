@@ -2,6 +2,7 @@
 
 const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
+const path = require(`path`);
 
 const {
   getRandomInt,
@@ -17,8 +18,12 @@ const {
 const DEFAULT_COUNT = 1;
 const FILE_NAME = `mocks.json`;
 
+const FILE_SENTENCES_PATH = path.resolve(__dirname, `../../../data/sentences.txt`);
+const FILE_TITLES_PATH = path.resolve(__dirname, `../../../data/titles.txt`);
+const FILE_CATEGORIES_PATH = path.resolve(__dirname, `../../../data/categories.txt`);
+
 const getRandomText = (arr, max) => {
-  let sliceTo = max || getRandomInt(1, TEXTES.length);
+  let sliceTo = max || getRandomInt(1, arr.length);
   return shuffle(arr).slice(0, sliceTo).join(' ');
 };
 
@@ -28,22 +33,35 @@ const getMonthesRandomDate = (monthesCount) => {
   return formatDate(getRandomDate(minDate, new Date()));
 };
 
-const generateOffers = (count) => (
+const generateOffers = (count, titles, categories, sentences) => (
   Array(count).fill({}).map(() => ({
-    title: TITLES[getRandomInt(0, TITLES.length - 1)],
-    announce: getRandomText(TEXTES, 5),
-    fullText: getRandomText(TEXTES),
-    сategory: shuffle(CATEGORIES).slice(0, getRandomInt(1, CATEGORIES.length)),
+    title: titles[getRandomInt(0, titles.length - 1)],
+    announce: getRandomText(sentences, 5),
+    fullText: getRandomText(sentences),
+    сategory: shuffle(categories).slice(1, getRandomInt(2, 10)),
     createdDate: getMonthesRandomDate(3)
   }))
 );
+
+const readContent = async (filePath) => {
+  try {
+    const content = await fs.readFile(filePath, `utf8`);
+    return content.split(`\n`);
+  } catch (e) {
+    console.error(chalk.red(e));
+    process.exit(ExitCode.fail);
+  }
+};
 
 module.exports = {
   name: `--generate`,
   async run(count) {
     try {
       const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT;
-      const content = JSON.stringify(generateOffers(countOffer));
+      const sentences = await readContent(FILE_SENTENCES_PATH);
+      const titles = await readContent(FILE_TITLES_PATH);
+      const categories = await readContent(FILE_CATEGORIES_PATH);
+      const content = JSON.stringify(generateOffers(countOffer, titles, categories, sentences));
       if (countOffer > 1000) {
         throw new Error(`Не больше 1000 публикаций`);
       }
