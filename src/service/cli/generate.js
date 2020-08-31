@@ -24,7 +24,7 @@ const FILE_CATEGORIES_PATH = path.resolve(__dirname, `../../../data/categories.t
 
 const getRandomText = (arr, max) => {
   let sliceTo = max || getRandomInt(1, arr.length);
-  return shuffle(arr).slice(0, sliceTo).join(' ');
+  return shuffle(arr).slice(0, sliceTo).join(` `);
 };
 
 const getMonthesRandomDate = (monthesCount) => {
@@ -48,8 +48,7 @@ const readContent = async (filePath) => {
     const content = await fs.readFile(filePath, `utf8`);
     return content.split(`\n`);
   } catch (e) {
-    console.error(chalk.red(e));
-    process.exit(ExitCode.fail);
+    return [];
   }
 };
 
@@ -72,4 +71,4 @@ module.exports = {
       process.exit(ExitCode.error);
     }
   }
-}
+};
