@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require(`express`);
+const path = require(`path`);
 
 const routes = {
   index: require(`./routes/index`),
@@ -13,6 +14,11 @@ const routes = {
 };
 
 const app = express();
+
+app.set(`views`, path.resolve(__dirname, `./templates`));
+app.set(`view engine`, `pug`);
+
+app.use(express.static(path.resolve(__dirname, `./public`)));
 app.use(`/`, routes.index);
 app.use(`/register`, routes.register);
 app.use(`/login`, routes.login);
@@ -21,5 +27,19 @@ app.use(`/articles`, routes.articles);
 app.use(`/search`, routes.search);
 app.use(`/categories`, routes.categories);
 
-const port = 8080;
+app.use((req, res, next) => {
+  res.status(404).render(`errors/400`, {
+    logoClass: `header__logo--404`
+  });
+  next();
+});
+app.use((err, req, res, next) => {
+  res.status(500).render(`errors/500`, {
+    logoClass: `header__logo--500`
+  });
+  next();
+});
+
+
+const port = 8081;
 app.listen(port);
