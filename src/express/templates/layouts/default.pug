@@ -1,3 +1,4 @@
+block variables
 <!DOCTYPE html>
 html(lang='ru')
     head
@@ -11,7 +12,7 @@ html(lang='ru')
         link(rel='preload' href='fonts/SFProDisplay-Regular.woff2' as='font' crossorigin='anonymous')
         link(rel='stylesheet' href='css/style.min.css')
     body
-        .wrapper
+        div(class=`${wraperClass || "wrapper"}`)
             include ../components/header.pug
             block content
             include ../components/footer.pug
