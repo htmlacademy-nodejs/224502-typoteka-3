@@ -28,6 +28,7 @@ if (calendar) {
 // переключение формы по табу
 let popup = document.querySelector('.popup');
 if (popup) {
+
   let tabs = popup.querySelectorAll('.popup__tab');
 
   if (tabs) {
