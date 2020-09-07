@@ -33,13 +33,13 @@ app.use((req, res, next) => {
   });
   next();
 });
-// app.use((err, req, res, next) => {
-//   res.status(500).render(`errors/500`, {
-//     logoClass: `header__logo--500`
-//   });
-//   next();
-// });
+app.use((err, req, res, next) => {
+  res.status(500).render(`errors/500`, {
+    logoClass: `header__logo--500`
+  });
+  next();
+});
 
 
-const port = 8081;
+const port = 8080;
 app.listen(port);
